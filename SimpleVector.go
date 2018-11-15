@@ -8,10 +8,6 @@ type SVector struct {
     X, Y, Z float64
 }
 
-func (sv SVector) Magnitude() (float64) {
-    return math.Sqrt(sv.X*sv.X+sv.Y*sv.Y+sv.Z*sv.Z)
-}
-
 func (sv SVector) Subtract(sv2 SVector) (SVector) {
     return SVector{sv.X-sv2.X, sv.Y-sv2.Y, sv.Z-sv2.Z}
 }
@@ -58,14 +54,26 @@ func (sv SVector) Normalize() (SVector) {
     return sv
 }
 
-func (sv SVector) Distance(sv2 SVector) (float64) {
-    return sv.Subtract(sv2).Magnitude()
-}
-
 func (sv SVector) Limit(n float64) (SVector) {
     if ( sv.Magnitude() > n) {
         return sv.Normalize().MultiplyN(n)
     } else {
         return sv
     }
+}
+
+func (sv SVector) Dot(sv2 SVector) (float64) {
+    return sv.X*sv2.X+sv.Y*sv2.Y+sv.Z*sv2.Z
+}
+
+func (sv SVector) Magnitude() (float64) {
+    return math.Sqrt(sv.Dot(sv))
+}
+
+func (sv SVector) Angle(sv2 SVector) (float64) {
+    return math.Acos(sv.Dot(sv2) / (sv.Magnitude()*sv2.Magnitude()))
+}
+
+func (sv SVector) Distance(sv2 SVector) (float64) {
+    return sv.Subtract(sv2).Magnitude()
 }
